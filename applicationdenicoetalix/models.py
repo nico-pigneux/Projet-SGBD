@@ -24,6 +24,8 @@ class Utilisateur(models.Model):
                 fields=["util_nom", "util_prenom"], name="util_nom_prenom"
             )
         ]
+    def __str__(self) :
+        return self.util_nom + ' ' + self.util_prenom
 
 
 class CategorieDeSoumission(models.Model):
@@ -40,32 +42,18 @@ class CategorieDeSoumission(models.Model):
         managed = True
         db_table = "categorie_de_soumission"
 
+    def __str__(self) :
+        return self.categorie
 
 class Conference(models.Model):
-    conf_intitule = models.CharField(
-        db_column="Conf_intitule", primary_key=True, max_length=100
-    )  # Field name made lowercase.
-    date_de_debut = models.DateField(
-        db_column="Date_de_debut"
-    )  # Field name made lowercase.
-    date_de_fin = models.DateField(
-        db_column="Date_de_fin"
-    )  # Field name made lowercase.
-    loc_ville = models.CharField(
-        db_column="Loc_Ville", max_length=15
-    )  # Field name made lowercase.
-    loc_pays = models.CharField(
-        db_column="Loc_Pays", max_length=15
-    )  # Field name made lowercase.
-    serie = models.CharField(
-        db_column="Serie", max_length=10
-    )  # Field name made lowercase.
-    text_introductif = models.TextField(
-        db_column="Text_introductif"
-    )  # Field name made lowercase.
-    editeur_actes = models.CharField(
-        db_column="Editeur_actes", max_length=30
-    )  # Field name made lowercase.
+    conf_intitule = models.CharField(db_column="Conf_intitule", primary_key=True, max_length=100)  # Field name made lowercase.
+    date_de_debut = models.DateField(db_column="Date_de_debut")  # Field name made lowercase.
+    date_de_fin = models.DateField(db_column="Date_de_fin")  # Field name made lowercase.
+    loc_ville = models.CharField(db_column="Loc_Ville", max_length=15)  # Field name made lowercase.
+    loc_pays = models.CharField(db_column="Loc_Pays", max_length=15)  # Field name made lowercase.
+    serie = models.CharField(db_column="Serie", max_length=10)  # Field name made lowercase.
+    text_introductif = models.TextField(db_column="Text_introductif")  # Field name made lowercase.
+    editeur_actes = models.CharField(db_column="Editeur_actes", max_length=30)  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -130,6 +118,8 @@ class Organisateur(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['orga_nom','conf_intitule'], name= 'orga_nom_conf_intitule')
         ]
+    def __str__(self) :
+        return self.orga_nom
 
 class Organise(models.Model):
     conf_intitule = models.ForeignKey(
@@ -175,33 +165,26 @@ class ProgramCommitee(models.Model):
                 fields=["pc_nom", "pc_prenom"], name="pc_nom_prenom"
             )
         ]
-
+    def __str__(self) :
+        return self.pc_nom + ' ' + self.pc_prenom
 
 class Responsabilite(models.Model):
-    responsabilite = models.CharField(
-        db_column="Responsabilite", primary_key=True, max_length=20
-    )  # Field name made lowercase.
+    responsabilite = models.CharField(db_column="Responsabilite", primary_key=True, max_length=20)  # Field name made lowercase.
 
     class Meta:
         managed = True
         db_table = "responsabilite"
 
+    def __str__(self) :
+        return self.responsabilite
 
 class Responsable(models.Model):
     id_resp = models.AutoField(primary_key=True)
     resp_nom = models.CharField(db_column="Resp_nom", max_length=20)
-    resp_prenom = models.CharField(
-        db_column="Resp_prenom", max_length=30
-    )  # Field name made lowercase.
-    adresse_professionnelle = models.CharField(
-        db_column="Adresse_Professionnelle", max_length=50
-    )  # Field name made lowercase.
-    mail = models.CharField(
-        db_column="Mail", max_length=30
-    )  # Field name made lowercase.
-    responsabilite = models.ForeignKey(
-        Responsabilite, models.DO_NOTHING, db_column="Responsabilite"
-    )  # Field name made lowercase.
+    resp_prenom = models.CharField(db_column="Resp_prenom", max_length=30)  # Field name made lowercase.
+    adresse_professionnelle = models.CharField(db_column="Adresse_Professionnelle", max_length=50)  # Field name made lowercase.
+    mail = models.CharField(db_column="Mail", max_length=30)  # Field name made lowercase.
+    responsabilite = models.ForeignKey(Responsabilite, models.DO_NOTHING, db_column="Responsabilite")  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -212,18 +195,15 @@ class Responsable(models.Model):
                 fields=["resp_nom", "resp_prenom"], name="resp_nom_prenom"
             )
         ]
-
+    def __str__(self) :
+        return self.resp_nom + ' ' + self.resp_prenom
 
 class ResponsableDe(models.Model):
-    conf_intitule = models.ForeignKey(
-        Conference, models.DO_NOTHING, db_column="Conf_intitule"
-    )
+    conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column="Conf_intitule")
     # Ces champs sont déjà dans la table 'Reponsable'
     # resp_nom = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='Resp_nom')  # Field name made lowercase.
     # resp_prenom = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='Resp_prenom', to_field='resp_prenom', related_name='responsablede_resp_prenom_set')  # Field name made lowercase.
-    responsable = models.ForeignKey(
-        Responsable, models.DO_NOTHING, db_column="responsable"
-    )
+    responsable = models.ForeignKey(Responsable, models.DO_NOTHING, db_column="responsable")
 
     class Meta:
         managed = True
@@ -237,20 +217,16 @@ class ResponsableDe(models.Model):
 
 
 class Session(models.Model):
-    sess_intitule = models.CharField(
-        db_column="Sess_intitule", primary_key=True, max_length=100
-    )  # Field name made lowercase.
-    themes = models.CharField(
-        db_column="Themes", max_length=100
-    )  # Field name made lowercase.
-    conf_intitule = models.ForeignKey(
-        Conference, models.DO_NOTHING, db_column="Conf_intitule"
-    )  # Field name made lowercase.
+    sess_intitule = models.CharField(db_column="Sess_intitule", primary_key=True, max_length=100)  # Field name made lowercase.
+    themes = models.CharField(db_column="Themes", max_length=100)  # Field name made lowercase.
+    conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column="Conf_intitule")  # Field name made lowercase.
 
     class Meta:
         managed = True
         db_table = "session"
 
+    def __str__(self) :
+        return self.sess_intitule
 
 class Soumission(models.Model):
     soumi_intitule = models.CharField(db_column='Soumi_intitule', primary_key=True, max_length=100)  # Field name made lowercase.
@@ -261,14 +237,15 @@ class Soumission(models.Model):
     # champs déjà renseignés dans la table 'Utilisateur'
     # util_nom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_nom')  # Field name made lowercase.
     # util_prenom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_prenom', to_field='util_prenom', related_name='soumission_util_prenom_set')  # Field name made lowercase.
-    utilisateur = models.ForeignKey(
-        Utilisateur, models.DO_NOTHING, db_column="utilisateur"
-    )
+    utilisateur = models.ForeignKey(Utilisateur, models.DO_NOTHING, db_column="utilisateur")
 
     class Meta:
         managed = True
         db_table = "soumission"
 
+    def __str__(self) :
+        return self.soumi_intitule
+    
 
 class Workshop(models.Model):
     wk_intitule = models.OneToOneField(Soumission, models.DO_NOTHING, db_column='wk_intitule')  # Field name made lowercase.
@@ -286,6 +263,8 @@ class Workshop(models.Model):
         managed = True
         db_table = "workshop"
 
+    def __str__(self) :
+        return self.wk_intitule
 
 # class Question(models.Model):
 #     question_text = models.CharField(max_length=200)
