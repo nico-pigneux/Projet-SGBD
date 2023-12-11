@@ -1,11 +1,5 @@
 from django.db import models
 from django.conf import global_settings
-<<<<<<< HEAD:App_conference/models.py
-=======
-from django.utils import translation
-
-# from compositefk.fields import CompositeForeignKey
->>>>>>> 039e041bc2dea95d2d499d10f41a4c77ecefa695:applicationdenicoetalix/models.py
 from django.db.models.deletion import CASCADE, DO_NOTHING
 
 # Create your models here.
@@ -33,7 +27,6 @@ class Utilisateur(models.Model):
 
 
 class CategorieDeSoumission(models.Model):
-<<<<<<< HEAD:App_conference/models.py
     categorie = models.CharField(db_column='Nom', primary_key=True, max_length=20)  # Field name made lowercase.
     nombre_de_pages_max = models.IntegerField(db_column='Nombre_de_pages_max')  # Field name made lowercase.
     mep_police = models.CharField(db_column='Mep_Police', max_length=10)  # Field name made lowercase.
@@ -42,42 +35,6 @@ class CategorieDeSoumission(models.Model):
     date_limite_de_soumission = models.DateField(db_column='Date_limite_de_soumission')  # Field name made lowercase.
     date_de_notification = models.CharField(db_column='Date_de_notification', max_length=1)  # Field name made lowercase.
     date_limite_de_correction = models.DateField(db_column='Date_limite_de_correction')  # Field name made lowercase.
-=======
-    nom = models.CharField(
-        db_column="Nom", primary_key=True, max_length=10
-    )  # Field name made lowercase.
-    soumi_intitule = models.OneToOneField(
-        "Soumission",
-        models.DO_NOTHING,
-        db_column="Soumi_intitule",
-        blank=True,
-        null=True,
-    )  # Field name made lowercase.
-    wk_intitule = models.OneToOneField(
-        "Workshop", models.DO_NOTHING, db_column="WK_intitule", blank=True, null=True
-    )  # Field name made lowercase.
-    nombre_de_pages_max = models.IntegerField(
-        db_column="Nombre_de_pages_max"
-    )  # Field name made lowercase.
-    mep_police = models.CharField(
-        db_column="Mep_Police", max_length=10
-    )  # Field name made lowercase.
-    mep_taille_de_caracteres = models.IntegerField(
-        db_column="Mep_Taille_de_caracteres"
-    )  # Field name made lowercase.
-    mep_type_de_logiciel = models.CharField(
-        db_column="Mep_Type_de_logiciel", max_length=10
-    )  # Field name made lowercase.
-    date_limite_de_soumission = models.DateField(
-        db_column="Date_limite_de_soumission"
-    )  # Field name made lowercase.
-    date_de_notification = models.CharField(
-        db_column="Date_de_notification", max_length=1
-    )  # Field name made lowercase.
-    date_limite_de_correction = models.DateField(
-        db_column="Date_limite_de_correction"
-    )  # Field name made lowercase.
->>>>>>> 039e041bc2dea95d2d499d10f41a4c77ecefa695:applicationdenicoetalix/models.py
 
     class Meta:
         managed = True
@@ -112,27 +69,10 @@ class Conference(models.Model):
 
     class Meta:
         managed = True
-<<<<<<< HEAD:App_conference/models.py
         db_table = 'conference'
 
     def __str__(self) :
         return self.conf_intitule
-=======
-        db_table = "conference"
-
-
-class Etat(models.Model):
-    etat = models.CharField(
-        db_column="Etat", primary_key=True, max_length=10
-    )  # Field name made lowercase.
-    soumi_intitule = models.OneToOneField(
-        "Soumission", models.DO_NOTHING, db_column="Soumi_intitule"
-    )  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = "etat"
->>>>>>> 039e041bc2dea95d2d499d10f41a4c77ecefa695:applicationdenicoetalix/models.py
 
 
 class Evaluation(models.Model):
@@ -179,7 +119,6 @@ class Inscription(models.Model):
 
 
 class Organisateur(models.Model):
-<<<<<<< HEAD:App_conference/models.py
     orga_nom = models.CharField(db_column='Orga_nom', max_length=20)  # Field name made lowercase.
     conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='Conf_intitule')  # Field name made lowercase.
     adresse = models.CharField(db_column='Adresse', max_length=50)  # Field name made lowercase.
@@ -191,25 +130,6 @@ class Organisateur(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['orga_nom','conf_intitule'], name= 'orga_nom_conf_intitule')
         ]
-=======
-    orga_nom = models.CharField(
-        db_column="Orga_nom", primary_key=True, max_length=20
-    )  # Field name made lowercase.
-    conf_intitule = models.OneToOneField(
-        Conference, models.DO_NOTHING, db_column="Conf_intitule"
-    )  # Field name made lowercase.
-    adresse = models.CharField(
-        db_column="Adresse", max_length=50
-    )  # Field name made lowercase.
-    mail = models.CharField(
-        db_column="Mail", max_length=30
-    )  # Field name made lowercase.
-
-    class Meta:
-        managed = True
-        db_table = "organisateur"
-
->>>>>>> 039e041bc2dea95d2d499d10f41a4c77ecefa695:applicationdenicoetalix/models.py
 
 class Organise(models.Model):
     conf_intitule = models.ForeignKey(
@@ -333,23 +253,11 @@ class Session(models.Model):
 
 
 class Soumission(models.Model):
-<<<<<<< HEAD:App_conference/models.py
     soumi_intitule = models.CharField(db_column='Soumi_intitule', primary_key=True, max_length=100)  # Field name made lowercase.
     date_de_soumission = models.DateField(db_column='Date_de_soumission')  # Field name made lowercase.
     session_intitule = models.ForeignKey(Session, models.DO_NOTHING, db_column='session_intitule')
     etat = models.CharField(db_column='Etat', max_length=10 )
     categorie =  models.ForeignKey(CategorieDeSoumission, models.DO_NOTHING, db_column='categorie')
-=======
-    soumi_intitule = models.CharField(
-        db_column="Soumi_intitule", primary_key=True, max_length=100
-    )  # Field name made lowercase.
-    date_de_soumission = models.DateField(
-        db_column="Date_de_soumission"
-    )  # Field name made lowercase.
-    session_intitule = models.ForeignKey(
-        Session, models.DO_NOTHING, db_column="session_intitule"
-    )
->>>>>>> 039e041bc2dea95d2d499d10f41a4c77ecefa695:applicationdenicoetalix/models.py
     # champs déjà renseignés dans la table 'Utilisateur'
     # util_nom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_nom')  # Field name made lowercase.
     # util_prenom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_prenom', to_field='util_prenom', related_name='soumission_util_prenom_set')  # Field name made lowercase.
@@ -363,7 +271,6 @@ class Soumission(models.Model):
 
 
 class Workshop(models.Model):
-<<<<<<< HEAD:App_conference/models.py
     wk_intitule = models.OneToOneField(Soumission, models.DO_NOTHING, db_column='wk_intitule')  # Field name made lowercase.
     date_de_debut = models.DateField(db_column='Date_de_debut')  # Field name made lowercase.
     date_de_fin = models.DateField(db_column='Date_de_fin')  # Field name made lowercase.
@@ -374,41 +281,6 @@ class Workshop(models.Model):
     editeur_actes = models.CharField(db_column='Editeur_actes', max_length=30)  # Field name made lowercase.
     conference_reliee_pour_workshop = models.CharField(db_column='Conference_reliee_pour_workshop', max_length=10)  # Field name made lowercase.
     conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='Conf_intitule')  # Field name made lowercase.
-=======
-    wk_intitule = models.CharField(
-        db_column="WK_intitule", primary_key=True, max_length=100
-    )  # Field name made lowercase.
-    date_de_debut = models.DateField(
-        db_column="Date_de_debut"
-    )  # Field name made lowercase.
-    date_de_fin = models.DateField(
-        db_column="Date_de_fin"
-    )  # Field name made lowercase.
-    loc_ville = models.CharField(
-        db_column="Loc_Ville", max_length=15
-    )  # Field name made lowercase.
-    loc_pays = models.CharField(
-        db_column="Loc_Pays", max_length=15
-    )  # Field name made lowercase.
-    serie = models.CharField(
-        db_column="Serie", max_length=10
-    )  # Field name made lowercase.
-    text_introductif = models.TextField(
-        db_column="Text_introductif"
-    )  # Field name made lowercase.
-    editeur_actes = models.CharField(
-        db_column="Editeur_actes", max_length=30
-    )  # Field name made lowercase.
-    conference_reliee_pour_workshop = models.CharField(
-        db_column="Conference_reliee_pour_workshop", max_length=10
-    )  # Field name made lowercase.
-    conf_intitule = models.ForeignKey(
-        Conference, models.DO_NOTHING, db_column="Conf_intitule"
-    )  # Field name made lowercase.
-    soumi_intitule = models.ForeignKey(
-        Soumission, models.DO_NOTHING, db_column="Soumi_intitule"
-    )  # Field name made lowercase.
->>>>>>> 039e041bc2dea95d2d499d10f41a4c77ecefa695:applicationdenicoetalix/models.py
 
     class Meta:
         managed = True
