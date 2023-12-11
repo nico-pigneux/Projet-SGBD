@@ -7,9 +7,8 @@ from django.db.models.deletion import CASCADE, DO_NOTHING
 # Create your models here.
 
 class Utilisateur(models.Model):
-    util_nom = models.CharField(db_column='Util_nom', primary_key=True, max_length=20) ## on retire la primary key ?##
-    # Field name made lowercase. The composite primary key (Util_nom, Util_prenom) found, that is not supported.\
-    # The first column is selected.
+    id_util = models.AutoField(primary_key=True)
+    util_nom = models.CharField(db_column='Util_nom', max_length=20) 
     util_prenom = models.CharField(db_column='Util_prenom', max_length=20)  # Field name made lowercase.
     mail = models.CharField(db_column='Mail', max_length=30)  # Field name made lowercase.
     profil = models.TextField(db_column='Profil')  # Field name made lowercase.
@@ -64,33 +63,31 @@ class Etat(models.Model):
 
 
 class Evaluation(models.Model):
-    soumi_intitule = models.OneToOneField('Soumission', models.DO_NOTHING, db_column='Soumi_intitule', primary_key=True)
-    # Field name made lowercase. The composite primary key (Soumi_intitule, PC_nom, PC_prenom) found, that is not supported.\
-    # The first column is selected.
-    pc_nom = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='PC_nom')  # Field name made lowercase.
-    pc_prenom = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='PC_prenom', to_field='pc_prenom', related_name='evaluation_pc_prenom_set')  # Field name made lowercase.
-
+    soumi_intitule = models.ForeignKey('Soumission', models.DO_NOTHING, db_column='Soumi_intitule')
+    # Champs déjà présents dans la table 'Progam_Commitee'
+    # pc_nom = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='PC_nom')  # Field name made lowercase.
+    # pc_prenom = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='PC_prenom', to_field='pc_prenom', related_name='evaluation_pc_prenom_set')  # Field name made lowercase.
+    prog_commitee = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='prog_commitee')
     class Meta:
         managed = True
         db_table = 'evaluation'
         constraints = [
-            models.UniqueConstraint(fields=['soumi_intitule', 'pc_nom', 'pc_prenom'], name='soumi_nom_prenom')
+            models.UniqueConstraint(fields=['soumi_intitule', 'prog_commitee'], name='soumi_prog_commitee')
         ]
 
 class Inscription(models.Model):
-    conf_intitule = models.OneToOneField(Conference, models.DO_NOTHING, db_column='Conf_intitule', primary_key=True)
-    # Field name made lowercase. The composite primary key (Conf_intitule, Util_nom, Util_prenom) found, that is not supported.\
-    # The first column is selected.
-    util_nom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_nom')  # Field name made lowercase.
-    util_prenom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_prenom', to_field='util_prenom', related_name='inscription_util_prenom_set')  # Field name made lowercase.
-    #util_nom_prenom = CompositeForeignKey(Utilisateur, on_delete = DO_NOTHING, to_fields = ['util_nom', 'util_prenom'])  # Field name made lowercase.
+    conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='Conf_intitule')
+    # Pas besoin de ces champs car ils sont déjà dans 'Utilisateur'
+    # util_nom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_nom')  # Field name made lowercase.
+    # util_prenom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_prenom', to_field='util_prenom', related_name='inscription_util_prenom_set')  # Field name made lowercase.
+    utilisateur = models.ForeignKey(Utilisateur, models.DO_NOTHING, db_column='utilisateur')
 
     class Meta:
         managed = True
         db_table = 'inscription'
         # unique_together = (('conf_intitule', 'util_nom', 'util_prenom'), ('conf_intitule', 'util_nom', 'util_prenom'),)
         constraints = [
-            models.UniqueConstraint(fields=['conf_intitule', 'util_nom', 'util_prenom'], name='conf_nom_prenom')
+            models.UniqueConstraint(fields=['conf_intitule', 'utilisateur'], name='conf_utilisateur')
         ]
 
 class Organisateur(models.Model):
@@ -105,24 +102,23 @@ class Organisateur(models.Model):
 
 
 class Organise(models.Model):
-    conf_intitule = models.OneToOneField(Conference, models.DO_NOTHING, db_column='Conf_intitule', primary_key=True)
-    # Field name made lowercase. The composite primary key (Conf_intitule, PC_nom, PC_prenom) found, that is not supported. \
-    # The first column is selected.
-    pc_nom = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='PC_nom')  # Field name made lowercase.
-    pc_prenom = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='PC_prenom', to_field='pc_prenom', related_name='organise_pc_prenom_set')  # Field name made lowercase.
-
+    conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='Conf_intitule')
+    # Ces champs figures déjà dans la table 'Programm_Comitee'
+    # pc_nom = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='PC_nom')  # Field name made lowercase.
+    # pc_prenom = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='PC_prenom', to_field='pc_prenom', related_name='organise_pc_prenom_set')  # Field name made lowercase.
+    prog_commitee = models.ForeignKey('ProgramCommitee', models.DO_NOTHING, db_column='prog_commitee')
     class Meta:
         managed = True
         db_table = 'organise'
         #unique_together = (('conf_intitule', 'pc_nom', 'pc_prenom'), ('conf_intitule', 'pc_nom', 'pc_prenom'),)
         constraints = [
-            models.UniqueConstraint(fields=['conf_intitule', 'pc_nom', 'pc_prenom'], name='conf_pc_nom_prenom')
+            models.UniqueConstraint(fields=['conf_intitule', 'prog_commitee'], name='conf_prog_commitee')
         ]
 
 class ProgramCommitee(models.Model):
+    id_prog_commitee = models.AutoField(primary_key=True)
     pc_nom = models.CharField(db_column='PC_nom', max_length=20) 
-    # Field name made lowercase. The composite primary key (PC_nom, PC_prenom) found, that is not supported. The first column is selected.
-    pc_prenom = models.CharField(db_column='PC_prenom', primary_key=True, max_length=30)  # Field name made lowercase.
+    pc_prenom = models.CharField(db_column='PC_prenom', max_length=30)  # Field name made lowercase.
     adresse_professionnelle = models.CharField(db_column='Adresse_Professionnelle', max_length=50)  # Field name made lowercase.
     mail = models.CharField(db_column='Mail', max_length=30)  # Field name made lowercase.
 
@@ -143,9 +139,8 @@ class Responsabilite(models.Model):
 
 
 class Responsable(models.Model):
-    resp_nom = models.CharField(db_column='Resp_nom', primary_key=True, max_length=20)
-    # Field name made lowercase. The composite primary key (Resp_nom, Resp_prenom) found, that is not supported.\
-    # The first column is selected.
+    id_resp = models.AutoField(primary_key=True)
+    resp_nom = models.CharField(db_column='Resp_nom', max_length=20)
     resp_prenom = models.CharField(db_column='Resp_prenom', max_length=30)  # Field name made lowercase.
     adresse_professionnelle = models.CharField(db_column='Adresse_Professionnelle', max_length=50)  # Field name made lowercase.
     mail = models.CharField(db_column='Mail', max_length=30)  # Field name made lowercase.
@@ -160,24 +155,24 @@ class Responsable(models.Model):
         ]
 
 class ResponsableDe(models.Model):
-    conf_intitule = models.OneToOneField(Conference, models.DO_NOTHING, db_column='Conf_intitule', primary_key=True) 
-    # Field name made lowercase. The composite primary key (Conf_intitule, Resp_nom, Resp_prenom) found, that is not supported.\
-    # The first column is selected.
-    resp_nom = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='Resp_nom')  # Field name made lowercase.
-    resp_prenom = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='Resp_prenom', to_field='resp_prenom', related_name='responsablede_resp_prenom_set')  # Field name made lowercase.
+    conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='Conf_intitule') 
+    # Ces champs sont déjà dans la table 'Reponsable'
+    # resp_nom = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='Resp_nom')  # Field name made lowercase.
+    # resp_prenom = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='Resp_prenom', to_field='resp_prenom', related_name='responsablede_resp_prenom_set')  # Field name made lowercase.
+    responsable = models.ForeignKey(Responsable, models.DO_NOTHING, db_column='responsable')
 
     class Meta:
         managed = True
         db_table = 'responsable_de'
         # unique_together = (('conf_intitule', 'resp_nom', 'resp_prenom'), ('conf_intitule', 'resp_nom', 'resp_prenom'),)
         constraints = [
-            models.UniqueConstraint(fields=['conf_intitule', 'resp_nom', 'resp_prenom'], name='conf_resp_nom_prenom')
+            models.UniqueConstraint(fields=['conf_intitule', 'responsable'], name='conf_responsable')
         ]
 
 class Session(models.Model):
     sess_intitule = models.CharField(db_column='Sess_intitule', primary_key=True, max_length=100)  # Field name made lowercase.
     themes = models.CharField(db_column='Themes', max_length=100)  # Field name made lowercase.
-    de_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='De_Intitule')  # Field name made lowercase.
+    conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='Conf_intitule')  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -188,13 +183,14 @@ class Soumission(models.Model):
     soumi_intitule = models.CharField(db_column='Soumi_intitule', primary_key=True, max_length=100)  # Field name made lowercase.
     date_de_soumission = models.DateField(db_column='Date_de_soumission')  # Field name made lowercase.
     session_intitule = models.ForeignKey(Session, models.DO_NOTHING, db_column='session_intitule')
-    util_nom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_nom')  # Field name made lowercase.
-    util_prenom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_prenom', to_field='util_prenom', related_name='soumission_util_prenom_set')  # Field name made lowercase.
-
+    # champs déjà renseignés dans la table 'Utilisateur'
+    # util_nom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_nom')  # Field name made lowercase.
+    # util_prenom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_prenom', to_field='util_prenom', related_name='soumission_util_prenom_set')  # Field name made lowercase.
+    utilisateur = models.ForeignKey(Utilisateur, models.DO_NOTHING, db_column='utilisateur')
     class Meta:
         managed = True
         db_table = 'soumission'
-
+        
 
 class Workshop(models.Model):
     wk_intitule = models.CharField(db_column='WK_intitule', primary_key=True, max_length=100)  # Field name made lowercase.
