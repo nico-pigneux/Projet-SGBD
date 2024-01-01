@@ -138,7 +138,7 @@ class ProgramCommitee(models.Model):
     def __str__(self) :
         return self.pc_nom + ' ' + self.pc_prenom
 
-class Responsabilite(models.Model):
+class Responsabilite(models.Model): 
     responsabilite = models.CharField(db_column="Responsabilite", primary_key=True, max_length=20)  # Field name made lowercase.
 
     class Meta:
@@ -214,7 +214,7 @@ class Soumission(models.Model):
     
 
 class Workshop(models.Model):
-    wk_intitule = models.OneToOneField(Soumission, models.DO_NOTHING, db_column='wk_intitule')  # Field name made lowercase.
+    wk_intitule = models.OneToOneField(Soumission, models.DO_NOTHING, db_column='wk_intitule', primary_key=True)  # Field name made lowercase.
     date_de_debut = models.DateField(db_column='Date_de_debut')  # Field name made lowercase.
     date_de_fin = models.DateField(db_column='Date_de_fin')  # Field name made lowercase.
     loc_ville = models.CharField(db_column='Loc_Ville', max_length=15)  # Field name made lowercase.
@@ -222,15 +222,14 @@ class Workshop(models.Model):
     serie = models.CharField(db_column='Serie', max_length=10)  # Field name made lowercase.
     text_introductif = models.TextField(db_column='Text_introductif')  # Field name made lowercase.
     editeur_actes = models.CharField(db_column='Editeur_actes', max_length=30)  # Field name made lowercase.
-    conference_reliee_pour_workshop = models.CharField(db_column='Conference_reliee_pour_workshop', max_length=10)  # Field name made lowercase.
-    conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='Conf_intitule')  # Field name made lowercase.
+    conf_intitule = models.OneToOneField(Conference, models.DO_NOTHING, db_column='Conf_intitule')  # Field name made lowercase.
 
     class Meta:
         managed = True
         db_table = "workshop"
 
     def __str__(self) :
-        return self.wk_intitule
+        return str(self.wk_intitule)
 
 # class Question(models.Model):
 #     question_text = models.CharField(max_length=200)
