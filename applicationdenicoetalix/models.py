@@ -29,9 +29,9 @@ class CategorieDeSoumission(models.Model):
     mep_police = models.CharField(db_column='Mep_Police', max_length=10)  # Field name made lowercase.
     mep_taille_de_caracteres = models.IntegerField(db_column='Mep_Taille_de_caracteres')  # Field name made lowercase.
     mep_type_de_logiciel = models.CharField(db_column='Mep_Type_de_logiciel', max_length=10)  # Field name made lowercase.
-    date_limite_de_soumission_en_jours_avant_la_conference= models.IntegerField(db_column='Date_limite_de_soumission_avant_conf')  # Field name made lowercase.
-    date_de_notification = models.CharField(db_column='Date_de_notification', max_length=1)  # Field name made lowercase.
-    date_limite_de_correction = models.DateField(db_column='Date_limite_de_correction')  # Field name made lowercase.
+    date_limite_de_soumission_en_jours_avant_la_conference= models.IntegerField(db_column='Date_limite_de_soumission')  # Field name made lowercase.
+    délai_de_notification_après_soummission= models.IntegerField(db_column='Delai_de_notification')  # Field name made lowercase.
+    date_limite_de_correction_avant_conference = models.IntegerField(db_column='Date_limite_de_correction_avant_conference')  # Field name made lowercase.
 
     class Meta:
         managed = True
@@ -88,6 +88,8 @@ class Inscription(models.Model):
             models.UniqueConstraint(fields=["conf_intitule", "utilisateur"], name="conf_utilisateur")
         ]
 
+    def __str__(self) :
+        return str(self.conf_intitule) + ' -- '+ str(self.utilisateur)
 
 class Organisateur(models.Model):
     orga_nom = models.CharField(db_column='Orga_nom', max_length=20)  # Field name made lowercase.
