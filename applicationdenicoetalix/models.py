@@ -30,7 +30,7 @@ class CategorieDeSoumission(models.Model):
     mep_taille_de_caracteres = models.IntegerField(db_column='Mep_Taille_de_caracteres')  # Field name made lowercase.
     mep_type_de_logiciel = models.CharField(db_column='Mep_Type_de_logiciel', max_length=10)  # Field name made lowercase.
     date_limite_de_soumission_en_jours_avant_la_conference= models.IntegerField(db_column='Date_limite_de_soumission')  # Field name made lowercase.
-    délai_de_notification_après_soummission= models.IntegerField(db_column='Delai_de_notification')  # Field name made lowercase.
+    delai_de_notification_apres_soummission= models.IntegerField(db_column='Delai_de_notification')  # Field name made lowercase.
     date_limite_de_correction_avant_conference = models.IntegerField(db_column='Date_limite_de_correction_avant_conference')  # Field name made lowercase.
 
     class Meta:
@@ -72,7 +72,9 @@ class Evaluation(models.Model):
             models.UniqueConstraint(fields=["soumi_intitule", "prog_commitee"], name="soumi_prog_commitee")
         ]
 
-
+    def __str__(self) :
+        return str(self.soumi_intitule) + " -- " + str(self.prog_commitee)
+    
 class Inscription(models.Model):
     conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column="Conf_intitule")
     # Pas besoin de ces champs car ils sont déjà dans 'Utilisateur'
@@ -208,7 +210,6 @@ class Soumission(models.Model):
     # champs déjà renseignés dans la table 'Utilisateur'
     # util_nom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_nom')  # Field name made lowercase.
     # util_prenom = models.ForeignKey('Utilisateur', models.DO_NOTHING, db_column='Util_prenom', to_field='util_prenom', related_name='soumission_util_prenom_set')  # Field name made lowercase.
-    utilisateur = models.ForeignKey(Utilisateur, models.DO_NOTHING, db_column="utilisateur")
 
     class Meta:
         managed = True
@@ -227,7 +228,7 @@ class Workshop(models.Model):
     serie = models.CharField(db_column='Serie', max_length=10)  # Field name made lowercase.
     text_introductif = models.TextField(db_column='Text_introductif')  # Field name made lowercase.
     editeur_actes = models.CharField(db_column='Editeur_actes', max_length=30)  # Field name made lowercase.
-    conf_intitule = models.OneToOneField(Conference, models.DO_NOTHING, db_column='Conf_intitule')  # Field name made lowercase.
+    conf_intitule = models.ForeignKey(Conference, models.DO_NOTHING, db_column='Conf_intitule')  # Field name made lowercase.
 
     class Meta:
         managed = True
